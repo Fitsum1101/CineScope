@@ -1,9 +1,17 @@
-import Image from "next/image";
+import RecommendedSection from "./_components/recommeded-section";
+import TrendingCarousel from "./_components/treding-carousel";
+import HeroBanner from "./_components/hero_banner";
+import SearchBar from "./_components/search-bar";
+import GenreGrid from "./_components/genere";
 
 export default function Home() {
   return (
     <div>
-      <h1>hello word</h1>
+      <HeroBanner />
+      <SearchBar />
+      <TrendingCarousel />
+      <RecommendedSection />
+      <GenreGrid />
     </div>
   );
 }
