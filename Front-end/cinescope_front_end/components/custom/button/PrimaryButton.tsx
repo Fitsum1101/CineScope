@@ -29,10 +29,14 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       disabled={isLoading || isDisabled}
       type={type}
       onClick={onClick}
-      className={`${className}`}
+      className={cn(
+        buttonVariants({ variant, size }),
+        "px-6 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:shadow-lg glow-hover transition-all duration-300",
+        className
+      )}
     >
       {title}
-      {isLoading && <Loader className="ml-1 h-3 w-3 animate-spin" />}
+      {isLoading && <Loader className="w-3 h-3 ml-1 animate-spin" />}
     </Button>
   );
 };

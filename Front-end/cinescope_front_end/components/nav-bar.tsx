@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import PrimaryButton from "./custom/button/PrimaryButton";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,28 +17,28 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-background border-b border-card backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <nav className="sticky top-0 z-50 border-b bg-background border-card backdrop-blur-md">
+      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center glow">
-              <span className="text-primary-foreground font-bold text-lg">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary glow">
+              <span className="text-lg font-bold text-primary-foreground">
                 C
               </span>
             </div>
-            <span className="hidden sm:inline text-xl font-bold text-primary">
+            <span className="hidden text-xl font-bold sm:inline text-primary">
               CineScope
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="items-center hidden gap-8 md:flex">
             {navItems.map((item) => (
               <Link
                 key={item}
                 href={`/${item.toLowerCase().replace(" ", "-")}`}
-                className="text-foreground hover:text-primary transition-colors duration-300 text-sm font-medium"
+                className="text-sm font-medium transition-colors duration-300 text-foreground hover:text-primary"
               >
                 {item}
               </Link>
@@ -46,9 +47,12 @@ export function Navbar() {
 
           {/* Desktop Login Button */}
           <div className="hidden md:block">
-            <button className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:shadow-lg glow-hover transition-all duration-300">
-              Login
-            </button>
+            <PrimaryButton
+              title="Login"
+              type="button"
+              className="cursor-pointer "
+              size="lg"
+            />
           </div>
 
           {/* Mobile Menu Button */}
@@ -62,19 +66,21 @@ export function Navbar() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden pb-4 space-y-3 animate-in fade-in">
+          <div className="pb-4 space-y-3 md:hidden animate-in fade-in">
             {navItems.map((item) => (
               <Link
                 key={item}
                 href={`/${item.toLowerCase().replace(" ", "-")}`}
-                className="block text-foreground hover:text-primary transition-colors"
+                className="block transition-colors text-foreground hover:text-primary"
               >
                 {item}
               </Link>
             ))}
-            <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg font-semibold">
-              Login
-            </button>
+            {/* <PrimaryButton
+              title="login"
+              type="button"
+              className="cursor-pointer bg-amber-700"
+            /> */}
           </div>
         )}
       </div>
