@@ -8,13 +8,7 @@ import PrimaryButton from "../custom/button/PrimaryButton";
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const navItems = [
-    "Home",
-    "Discover",
-    "Watchlist",
-    "AI Companion",
-    "Dashboard",
-  ];
+  const navItems = ["discoover", "Watchlist", "AI Companion", "Dashboard"];
 
   return (
     <nav className="sticky top-0 z-50 mb-5 border-b bg-background border-card backdrop-blur-md">

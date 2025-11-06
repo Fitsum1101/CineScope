@@ -7,19 +7,20 @@ export default function HeroBanner() {
   return (
     <section className="relative w-full h-screen overflow-hidden ">
       {/* Background with gradient overlay */}
+      {/* */}
       <div
-        className="absolute inset-0 bg-gradient-to-r from-background via-background to-muted"
+        className="absolute inset-0 bg-linear-to-r from-background via-background to-muted"
         style={{
           backgroundImage: `${getPublicAbsoluteURL(
-            "/placeholder.svg?height=600&width=1200&query=dark%20cinematic%20movie%20poster"
+            "assets/images/erik-mclean-7sgU1jV8-iw-unsplash.png"
           )}`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundAttachment: "fixed",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-background/90 to-background/40" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-r from-background/90 to-background/40" />
+        <div className="absolute inset-0 bg-linear-to-t from-background to-transparent" />
       </div>
 
       {/* Content */}
@@ -29,7 +30,7 @@ export default function HeroBanner() {
           <div className="overflow-hidden transition-transform duration-500 transform rounded-lg shadow-2xl glow hover:scale-105">
             <img
               src={`${getPublicAbsoluteURL(
-                "shannon-kunkle-eQwkTnp_5fk-unsplash.jpg"
+                "assets/images/shannon-kunkle-eQwkTnp_5fk-unsplash.jpg"
               )}`}
               alt="Featured Movie"
               className="w-full h-auto"
