@@ -7,7 +7,7 @@ import { RecentActivity } from "./recent-activity";
 import { StatsCards } from "./stats-cards";
 import { UserProfile } from "./user-profile";
 
-export default function DashboardPage() {
+export default function UserDashBoardPage() {
   return (
     <div>
       {/* Header with background */}

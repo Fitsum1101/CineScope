@@ -8,10 +8,10 @@ import PrimaryButton from "../custom/button/PrimaryButton";
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const navItems = ["discoover", "Watchlist", "AI Companion", "Dashboard"];
+  const navItems = ["discoover", "Watchlist", "AI Companion"];
 
   return (
-    <nav className="sticky top-0 z-50 mb-5 border-b bg-background border-card backdrop-blur-md">
+    <nav className="sticky top-0 z-50 border-b bg-background border-card backdrop-blur-md">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -41,12 +41,14 @@ export function Navbar() {
 
           {/* Desktop Login Button */}
           <div className="hidden md:block">
-            <PrimaryButton
-              title="Login"
-              type="button"
-              className="cursor-pointer "
-              size="lg"
-            />
+            <Link href={"login"}>
+              <PrimaryButton
+                title="Login"
+                type="button"
+                className="cursor-pointer "
+                size="lg"
+              />
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
