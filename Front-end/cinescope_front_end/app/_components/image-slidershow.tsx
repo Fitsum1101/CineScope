@@ -1,0 +1,36 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Movie } from "./treding-carousel";
+
+export default function ImageSlideshow({ moves }: { moves: Movie[] }) {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => {
+        console.log({
+          prevIndex: prevIndex < moves.length - 1,
+          len: moves.length,
+        });
+
+        return prevIndex < moves.length - 1 ? prevIndex + 1 : 0;
+      });
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [moves]);
+
+  return (
+    <div className="slideshow">
+      {moves?.map((move, index: number) => (
+        <img
+          key={index}
+          src={`https://image.tmdb.org/t/p/w500/${move.poster_path}`}
+          className={index === currentImageIndex ? "active" : ""}
+          alt={move.title}
+        />
+      ))}
+    </div>
+  );
+}

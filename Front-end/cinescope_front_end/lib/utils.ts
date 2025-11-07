@@ -5,7 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-
 export function getPublicAbsoluteURL(path: string) {
   return `${
     process.env.NEXT_PUBLIC_SITE_URL?.includes("138.128.242.42")

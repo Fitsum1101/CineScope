@@ -1,9 +1,26 @@
 "use client";
 
+import { createQueryOptions } from "@/utils/createQueryOptions";
 import { getPublicAbsoluteURL } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import ImageSlideshow from "./image-slidershow";
+import { tmdbApi } from "@/lib/axios/tmdbApi";
 import { Play, Sparkles } from "lucide-react";
 
 export default function HeroBanner() {
+  const { data, error, isLoading } = useQuery(
+    createQueryOptions(
+      ["heroBanner"],
+      () => tmdbApi.get("/movie/popular?language=en-US&page=1"),
+      {
+        select: (response: any) => {
+          console.log({ response });
+          return response?.data;
+        },
+      }
+    )
+  );
+
   return (
     <section className="relative w-full h-screen overflow-hidden ">
       {/* Background with gradient overlay */}
@@ -26,16 +43,8 @@ export default function HeroBanner() {
       {/* Content */}
       <div className="relative flex items-center justify-between h-full px-4 mx-auto sm:px-8 lg:px-16 max-w-7xl">
         {/* Movie Poster */}
-        <div className="hidden w-1/3 lg:block">
-          <div className="overflow-hidden transition-transform duration-500 transform rounded-lg shadow-2xl glow hover:scale-105">
-            <img
-              src={`${getPublicAbsoluteURL(
-                "assets/images/shannon-kunkle-eQwkTnp_5fk-unsplash.jpg"
-              )}`}
-              alt="Featured Movie"
-              className="w-full h-auto"
-            />
-          </div>
+        <div className="hidden w-1/3 h-[70vh]  lg:block">
+          <ImageSlideshow moves={data?.results ? data?.results : []} />
         </div>
 
         {/* Text Content */}

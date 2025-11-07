@@ -3,6 +3,26 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import { tmdbApi } from "@/lib/axios/tmdbApi";
+import { createQueryOptions } from "@/utils/createQueryOptions";
+
+export interface Movie {
+  adult: boolean;
+  backdrop_path: string | null;
+  genre_ids: number[];
+  id: number;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string | null;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+}
 
 export default function TrendingCarousel() {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -52,6 +72,16 @@ export default function TrendingCarousel() {
     },
   ];
 
+  const { data, error, isLoading } = useQuery(
+    createQueryOptions(
+      ["trendingMovies"],
+      () => tmdbApi.get("/movie/now_playing?language=en-US&page=1"),
+      {
+        select: (response: any) => response?.data,
+      }
+    )
+  );
+
   const scroll = (direction: "left" | "right") => {
     const container = document.getElementById("carousel");
     if (container) {
@@ -96,14 +126,17 @@ export default function TrendingCarousel() {
         <div
           id="carousel"
           className="flex gap-4 overflow-x-auto pb-4 scroll-smooth"
-          style={{ scrollBehavior: "smooth" }}
+          style={{ scrollBehavior: "smooth", scrollbarWidth: "none" }}
         >
-          {trendingMovies.map((movie) => (
+          {data?.results.map((movie: Movie) => (
             <Link key={movie.id} href={`/movie/${movie.id}`}>
               <div className="flex-shrink-0 w-48 group cursor-pointer">
                 <div className="relative rounded-lg overflow-hidden glow transition-all duration-500 transform hover:scale-105">
                   <img
-                    src={movie.image || "/placeholder.svg"}
+                    src={
+                      `https://image.tmdb.org/t/p/w500/${movie.poster_path}` ||
+                      "/placeholder.svg"
+                    }
                     alt={movie.title}
                     className="w-full h-80 object-cover"
                   />
@@ -113,11 +146,13 @@ export default function TrendingCarousel() {
                     </h3>
                     <div className="flex items-center justify-between mt-2">
                       <span className="text-sm text-muted-foreground">
-                        {movie.year}
+                        {movie.release_date}
                       </span>
                       <div className="flex items-center gap-1 text-primary">
                         <Star size={16} fill="currentColor" />
-                        <span className="font-semibold">{movie.rating}</span>
+                        <span className="font-semibold">
+                          {Math.round(movie.vote_average)}
+                        </span>
                       </div>
                     </div>
                   </div>
