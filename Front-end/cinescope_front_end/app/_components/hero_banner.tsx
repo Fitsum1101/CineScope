@@ -1,30 +1,16 @@
 "use client";
 
-import { createQueryOptions } from "@/utils/createQueryOptions";
+import { tradingMoviesQueryOptions } from "@/utils/queryOptions";
 import { getPublicAbsoluteURL } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import ImageSlideshow from "./image-slidershow";
-import { tmdbApi } from "@/lib/axios/tmdbApi";
 import { Play, Sparkles } from "lucide-react";
 
 export default function HeroBanner() {
-  const { data, error, isLoading } = useQuery(
-    createQueryOptions(
-      ["heroBanner"],
-      () => tmdbApi.get("/movie/popular?language=en-US&page=1"),
-      {
-        select: (response: any) => {
-          console.log({ response });
-          return response?.data;
-        },
-      }
-    )
-  );
+  const { data } = useQuery(tradingMoviesQueryOptions());
 
   return (
     <section className="relative w-full h-screen overflow-hidden ">
-      {/* Background with gradient overlay */}
-      {/* */}
       <div
         className="absolute inset-0 bg-linear-to-r from-background via-background to-muted"
         style={{
@@ -44,7 +30,7 @@ export default function HeroBanner() {
       <div className="relative flex items-center justify-between h-full px-4 mx-auto sm:px-8 lg:px-16 max-w-7xl">
         {/* Movie Poster */}
         <div className="hidden w-1/3 h-[70vh]  lg:block">
-          <ImageSlideshow moves={data?.results ? data?.results : []} />
+          <ImageSlideshow moves={data ? data : []} />
         </div>
 
         {/* Text Content */}

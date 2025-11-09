@@ -1,11 +1,14 @@
 import axios from "axios";
 
-export const tmdbApi = axios.create({
-  baseURL: "https://api.themoviedb.org/3",
+const options = {
+  method: "GET",
   headers: {
     accept: "application/json",
     Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
   },
-});
+};
 
-console.log(process.env.TMDB_ACCESS_TOKEN);
+export const tmdbApi = axios.create({
+  baseURL: "https://api.themoviedb.org/3",
+  ...options,
+});

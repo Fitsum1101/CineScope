@@ -1,18 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { Heart, Check, Star } from "lucide-react";
-import { getPublicAbsoluteURL } from "@/lib/utils";
+import { useState } from "react";
 
-interface Movie {
-  title: string;
-  year: number;
-  rating: number;
-  genre: string[];
-  duration: string;
-  backdrop: string;
-  poster: string;
-}
+import { Movie } from "@/types/movie";
 
 interface PosterBannerProps {
   movie: Movie;
@@ -35,12 +26,15 @@ export function PosterBanner({
 }: PosterBannerProps) {
   const [hoverRating, setHoverRating] = useState(0);
 
+  if (!movie) {
+    return;
+  }
+
   return (
     <div className="relative h-screen max-h-[600px] overflow-hidden">
-      {/* Backdrop with gradient overlay */}
       <div className="absolute inset-0">
         <img
-          src={getPublicAbsoluteURL("assets/images/placeholder.png")}
+          src={`https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`}
           alt={`${movie.title} backdrop`}
           className="object-cover w-full h-full"
           onError={(e) => {
@@ -51,22 +45,22 @@ export function PosterBanner({
         <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/40 to-transparent" />
       </div>
 
-      {/* Content */}
       <div className="relative flex items-end h-full">
         <div className="w-full px-4 pb-8 md:px-8 md:pb-12">
           <div className="flex flex-col gap-6 md:flex-row md:gap-8">
-            {/* Poster */}
             <div className="flex-shrink-0 hidden md:block slide-in">
               <div className="w-40 overflow-hidden border rounded-lg glow-hover border-accent/30">
                 <img
-                  src={movie.poster || "/placeholder.svg"}
+                  src={
+                    `https://image.tmdb.org/t/p/w500/${movie.poster_path}` ||
+                    "/placeholder.svg"
+                  }
                   alt={movie.title}
                   className="w-full h-auto"
                 />
               </div>
             </div>
 
-            {/* Title and Actions */}
             <div className="flex-1 slide-in">
               <div className="space-y-4">
                 <div>
@@ -74,7 +68,7 @@ export function PosterBanner({
                     {movie.title}
                   </h1>
                   <p className="text-lg font-semibold text-accent">
-                    ({movie.year})
+                    ({movie.release_date})
                   </p>
                 </div>
 
@@ -82,18 +76,16 @@ export function PosterBanner({
                 <div className="flex flex-wrap gap-4 text-sm md:text-base">
                   <span className="flex items-center gap-1 font-bold text-accent">
                     <Star className="w-4 h-4" />
-                    {movie.rating}/10
+                    {movie.vote_average}/10
                   </span>
-                  <span className="text-muted-foreground">
-                    {movie.duration}
-                  </span>
+                  <span className="text-muted-foreground">{movie.revenue}</span>
                   <div className="flex gap-2">
-                    {movie.genre.map((g) => (
+                    {movie.genres.map((g) => (
                       <span
-                        key={g}
+                        key={g.id}
                         className="px-3 py-1 text-xs font-medium rounded-full bg-secondary text-secondary-foreground"
                       >
-                        {g}
+                        {g.name}
                       </span>
                     ))}
                   </div>

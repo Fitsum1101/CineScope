@@ -1,13 +1,20 @@
+"use client";
+
+import { useParams } from "next/navigation";
+
+import { reivewQueryOptions } from "@/utils/queryOptions";
+import { useQuery } from "@tanstack/react-query";
+import { Review } from "@/types/review";
 import { Star } from "lucide-react";
 
-interface Review {
-  author: string;
-  rating: number;
-  text: string;
-  date: string;
-}
+export function ReviewsSection() {
+  const { id } = useParams();
+  const { data } = useQuery(reivewQueryOptions(id));
 
-export function ReviewsSection({ reviews }: { reviews: Review[] }) {
+  if (!data) {
+    return;
+  }
+
   return (
     <section className="py-8 fade-in">
       <h2 className="flex items-center gap-2 mb-6 text-2xl font-bold text-accent">
@@ -15,7 +22,7 @@ export function ReviewsSection({ reviews }: { reviews: Review[] }) {
         User Reviews
       </h2>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {reviews.map((review, index) => (
+        {data.map((review: Review, index) => (
           <div
             key={index}
             className="flex flex-col p-6 border rounded-lg bg-card border-border glow-hover"
@@ -23,14 +30,16 @@ export function ReviewsSection({ reviews }: { reviews: Review[] }) {
             <div className="flex items-start justify-between mb-3">
               <div>
                 <p className="font-semibold text-foreground">{review.author}</p>
-                <p className="text-xs text-muted-foreground">{review.date}</p>
+                <p className="text-xs text-muted-foreground">
+                  {review.created_at}
+                </p>
               </div>
-              <div className="flex items-center justify-center w-10 h-10 font-bold rounded-full bg-accent text-accent-foreground">
-                {review.rating}
-              </div>
+              {/* <div className="flex items-center justify-center w-10 h-10 font-bold rounded-full bg-accent text-accent-foreground">
+                {review.author_details.rating}
+              </div> */}
             </div>
             <p className="flex-1 leading-relaxed text-foreground">
-              {review.text}
+              {review.content}
             </p>
           </div>
         ))}

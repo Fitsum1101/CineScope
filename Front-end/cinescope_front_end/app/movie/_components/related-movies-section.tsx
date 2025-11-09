@@ -1,16 +1,22 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 import { useRef } from "react";
 
-interface RelatedMovie {
-  id: number;
-  title: string;
-  poster: string;
-}
+import { relatedMovieQueryOptions } from "@/utils/queryOptions";
 
-export function RelatedMoviesSection({ movies }: { movies: RelatedMovie[] }) {
+export function RelatedMoviesSection() {
   const scrollContainer = useRef<HTMLDivElement>(null);
+
+  const { id } = useParams();
+
+  const { data, error, isLoading } = useQuery(relatedMovieQueryOptions(id));
+
+  if (!data) {
+    return;
+  }
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainer.current) {
@@ -40,15 +46,16 @@ export function RelatedMoviesSection({ movies }: { movies: RelatedMovie[] }) {
         <div
           ref={scrollContainer}
           className="flex gap-4 pb-4 overflow-x-auto scrollbar-hide"
+          style={{ scrollbarWidth: "none" }}
         >
-          {movies.map((movie) => (
+          {data.map((movie) => (
             <div
               key={movie.id}
               className="flex-shrink-0 w-40 transition-transform duration-300 cursor-pointer group hover:scale-105"
             >
               <div className="h-64 overflow-hidden border rounded-lg glow-hover border-accent/30">
                 <img
-                  src={movie.poster || "/placeholder.svg"}
+                  src={`https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`}
                   alt={movie.title}
                   className="object-cover w-full h-full transition-all group-hover:brightness-110"
                 />
