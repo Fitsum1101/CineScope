@@ -1,6 +1,9 @@
 "use client";
 
-import { OverviewSection } from "../_components/overview-section.tsx";
+import {
+  CastCrewSection,
+  OverviewSection,
+} from "../_components/overview-section.tsx";
 import { PosterBanner } from "../_components/poster-banner";
 import { useState } from "react";
 
@@ -40,7 +43,7 @@ export default function MovieDetailsPage() {
             <div className="space-y-8 lg:col-span-2">
               <OverviewSection overview={data?.overview} />
               {/* <AISummarySection aiSummary={data.aiSummary} /> */}
-              {/* <CastCrewSection cast={data.cast} crew={data.crew} /> */}
+              <CastCrewSection />
             </div>
 
             {/* Sidebar */}

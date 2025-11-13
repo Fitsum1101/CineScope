@@ -2,8 +2,9 @@ import { tmdbApi } from "@/lib/axios/tmdbApi";
 import { createQueryOptions } from "./createQueryOptions";
 import { Movie } from "@/types/movie";
 import { Review } from "@/types/review";
+import { DEFAULT_SEARCH_OPTIONS } from "@/constants/search";
 
-// we need to fix the any type
+type SearchOptionsType = typeof DEFAULT_SEARCH_OPTIONS;
 
 export function relatedMovieQueryOptions(id: any) {
   return createQueryOptions(
@@ -41,6 +42,40 @@ export function movietailQueryOptions(id: any) {
     ({ queryKey }) => tmdbApi.get(`/movie/${queryKey[1]}`),
     {
       select: (res: any): Movie => res?.data,
+    }
+  );
+}
+
+export function discoverMoviesQueryOptions(searchOptions: SearchOptionsType) {
+  return createQueryOptions(
+    ["discoverMovies", searchOptions],
+    ({ queryKey }) => {
+      const [, options] = queryKey as [string, SearchOptionsType];
+      const params = Object.fromEntries(
+        Object.entries(options).filter(
+          ([_, value]) => value !== "" && value !== undefined
+        )
+      );
+      return tmdbApi.get("/search/movie", {
+        params: {
+          ...params,
+        },
+      });
+    },
+    {
+      select: (res: any): Movie[] => {
+        return res.data.results;
+      },
+    }
+  );
+}
+
+export function moiveCastQueryOptions(id: any) {
+  return createQueryOptions(
+    ["movieCast", id],
+    ({ queryKey }) => tmdbApi.get(`/movie/${queryKey[1]}/credits`),
+    {
+      select: (res: any) => res?.data,
     }
   );
 }

@@ -30,11 +30,11 @@ export default function TrendingCarousel() {
   };
 
   return (
-    <section className="bg-background py-12 px-4">
-      <div className="max-w-7xl mx-auto">
+    <section className="px-4 py-12 bg-background">
+      <div className="mx-auto max-w-7xl">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-3xl font-bold text-foreground mb-2">
+            <h2 className="mb-2 text-3xl font-bold text-foreground">
               Trending Now
             </h2>
             <p className="text-muted-foreground">
@@ -44,13 +44,13 @@ export default function TrendingCarousel() {
           <div className="flex gap-2">
             <button
               onClick={() => scroll("left")}
-              className="p-2 bg-card border border-secondary hover:border-primary rounded-lg text-primary transition-all duration-300 glow-hover"
+              className="p-2 transition-all duration-300 border rounded-lg bg-card border-secondary hover:border-primary text-primary glow-hover"
             >
               <ChevronLeft size={24} />
             </button>
             <button
               onClick={() => scroll("right")}
-              className="p-2 bg-card border border-secondary hover:border-primary rounded-lg text-primary transition-all duration-300 glow-hover"
+              className="p-2 transition-all duration-300 border rounded-lg bg-card border-secondary hover:border-primary text-primary glow-hover"
             >
               <ChevronRight size={24} />
             </button>
@@ -60,22 +60,22 @@ export default function TrendingCarousel() {
         {/* Carousel */}
         <div
           id="carousel"
-          className="flex gap-4 overflow-x-auto pb-4 scroll-smooth"
+          className="flex gap-4 pb-4 overflow-x-auto scroll-smooth"
           style={{ scrollBehavior: "smooth", scrollbarWidth: "none" }}
         >
           {data.map((movie: Movie) => (
             <Link key={movie.id} href={`/movie/${movie.id}`}>
-              <div className="flex-shrink-0 w-48 group cursor-pointer">
-                <div className="relative rounded-lg overflow-hidden glow transition-all duration-500 transform hover:scale-105">
+              <div className="flex-shrink-0 w-48 cursor-pointer group">
+                <div className="relative overflow-hidden transition-all duration-500 transform rounded-lg glow hover:scale-105">
                   <img
                     src={
                       `https://image.tmdb.org/t/p/w500/${movie.poster_path}` ||
                       "/placeholder.svg"
                     }
                     alt={movie.title}
-                    className="w-full h-80 object-cover"
+                    className="object-cover w-full h-80"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                  <div className="absolute inset-0 flex flex-col justify-end p-4 transition-opacity duration-300 opacity-0 bg-gradient-to-t from-background/80 to-transparent group-hover:opacity-100">
                     <h3 className="text-lg font-bold text-foreground">
                       {movie.title}
                     </h3>

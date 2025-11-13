@@ -204,3 +204,18 @@
   opacity: 1;
   transform: scale(1) translateX(0) rotate(0);
 }
+.element::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Scrollbar track (background) */
+.element::-webkit-scrollbar-track {
+  background: #0b0c10;
+  border-radius: 10px;
+}
+
+/* Scrollbar thumb (the draggable part) */
+.element::-webkit-scrollbar-thumb {
+  background: #66fcf1;
+  border-radius: 10px;
+}

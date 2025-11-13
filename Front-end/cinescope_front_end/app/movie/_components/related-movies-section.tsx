@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { useRef } from "react";
 
 import { relatedMovieQueryOptions } from "@/utils/queryOptions";
+import Link from "next/link";
 
 export function RelatedMoviesSection() {
   const scrollContainer = useRef<HTMLDivElement>(null);
@@ -49,9 +50,10 @@ export function RelatedMoviesSection() {
           style={{ scrollbarWidth: "none" }}
         >
           {data.map((movie) => (
-            <div
+            <Link
+              href={`${movie.id}`}
               key={movie.id}
-              className="flex-shrink-0 w-40 transition-transform duration-300 cursor-pointer group hover:scale-105"
+              className="flex-shrink-0 block w-40 transition-transform duration-300 cursor-pointer group hover:scale-105"
             >
               <div className="h-64 overflow-hidden border rounded-lg glow-hover border-accent/30">
                 <img
@@ -63,7 +65,7 @@ export function RelatedMoviesSection() {
               <p className="mt-3 text-sm font-medium text-center truncate text-foreground">
                 {movie.title}
               </p>
-            </div>
+            </Link>
           ))}
         </div>
 
