@@ -1,0 +1,176 @@
+{
+  "endpoints": {
+    "auth": {
+      "register": {
+        "method": "POST",
+        "path": "/api/auth/register",
+        "request_body": {
+          "username": "string",
+          "email": "string",
+          "password": "string",
+          "language": "string",
+          "country": "string"
+        },
+        "responses": {
+          "201": {
+            "data": {
+              "id": "number",
+              "username": "string",
+              "email": "string",
+              "created_at": "ISO8601"
+            },
+            "message": "User created successfully",
+            "success": true,
+            "errors": []
+          },
+          "400": {
+            "data": {},
+            "message": "Validation error",
+            "success": false,
+            "errors": [{ "field": "email", "message": "Invalid email format" }]
+          }
+        }
+      },
+      "login": {
+        "method": "POST",
+        "path": "/api/auth/login",
+        "request_body": {
+          "username": "string",
+          "password": "string"
+        },
+        "responses": {
+          "200": {
+            "data": {
+              "access_token": "string",
+              "refresh_token": "string",
+              "token_type": "Bearer",
+              "expires_in": "number",
+              "user": {
+                "id": "number",
+                "username": "string",
+                "email": "string"
+              }
+            },
+            "message": "Login successful",
+            "success": true,
+            "errors": []
+          },
+          "401": {
+            "data": {},
+            "message": "Invalid credentials",
+            "success": false,
+            "errors": []
+          }
+        }
+      }
+    },
+    "users": {
+      "profile": {
+        "method": "GET",
+        "path": "/api/users/profile",
+        "auth": "Bearer token",
+        "responses": {
+          "200": {
+            "data": {
+              "id": "number",
+              "username": "string",
+              "email": "string",
+              "profile_picture": "string/null",
+              "language": "string",
+              "country": "string",
+              "created_at": "ISO8601"
+            },
+            "message": "User profile fetched successfully",
+            "success": true,
+            "errors": []
+          }
+        }
+      },
+      "profile_update": {
+        "method": "PUT",
+        "path": "/api/users/profile",
+        "auth": "Bearer token",
+        "request_body": {
+          "profile_picture": "string/null",
+          "language": "string",
+          "country": "string"
+        },
+        "responses": {
+          "200": {
+            "data": {
+              "id": "number",
+              "username": "string",
+              "email": "string",
+              "profile_picture": "string/null",
+              "language": "string",
+              "country": "string",
+              "created_at": "ISO8601"
+            },
+            "message": "User profile updated successfully",
+            "success": true,
+            "errors": []
+          }
+        }
+      },
+      "profile_delete": {
+        "method": "DELETE",
+        "path": "/api/users/profile",
+        "auth": "Bearer token",
+        "responses": {
+          "204": {
+            "data": {},
+            "message": "User deleted successfully",
+            "success": true,
+            "errors": []
+          }
+        }
+      },
+      "list_users": {
+        "method": "GET",
+        "path": "/api/users",
+        "auth": "Bearer token (admin)",
+        "query_params": {
+          "page": "number (default 1)",
+          "page_size": "number (default 20)",
+          "search": "string (optional, username/email)"
+        },
+        "responses": {
+          "200": {
+            "data": {
+              "page": "number",
+              "page_size": "number",
+              "total_pages": "number",
+              "total_items": "number",
+              "results": [
+                {
+                  "id": "number",
+                  "username": "string",
+                  "email": "string",
+                  "profile_picture": "string/null",
+                  "language": "string",
+                  "country": "string",
+                  "created_at": "ISO8601"
+                }
+              ]
+            },
+            "message": "Users fetched successfully",
+            "success": true,
+            "errors": []
+          },
+          "401": {
+            "data": {},
+            "message": "Unauthorized",
+            "success": false,
+            "errors": []
+          },
+          "403": {
+            "data": {},
+            "message": "Forbidden: Admin only",
+            "success": false,
+            "errors": []
+          }
+        }
+      }
+    }
+  }
+}

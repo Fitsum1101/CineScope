@@ -4,6 +4,7 @@ import { Heart, Check, Star } from "lucide-react";
 import { useState } from "react";
 
 import { Movie } from "@/types/movie";
+import { formatRuntime } from "@/utils/lema";
 
 interface PosterBannerProps {
   movie: Movie;
@@ -25,10 +26,6 @@ export function PosterBanner({
   rating,
 }: PosterBannerProps) {
   const [hoverRating, setHoverRating] = useState(0);
-
-  if (!movie) {
-    return;
-  }
 
   return (
     <div className="relative h-screen max-h-[600px] overflow-hidden">
@@ -78,7 +75,9 @@ export function PosterBanner({
                     <Star className="w-4 h-4" />
                     {movie.vote_average}/10
                   </span>
-                  <span className="text-muted-foreground">{movie.revenue}</span>
+                  <span className="text-muted-foreground">
+                    {formatRuntime(movie.runtime)}
+                  </span>
                   <div className="flex gap-2">
                     {movie.genres.map((g) => (
                       <span

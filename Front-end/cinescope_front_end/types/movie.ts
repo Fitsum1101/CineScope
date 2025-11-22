@@ -1,8 +1,11 @@
+import { genere } from "./genere";
+
 export interface Movie {
   adult: boolean;
   backdrop_path: string | null;
   belongs_to_collection?: BelongsToCollection;
   budget: number;
+  genres: genere[];
   genre_ids: number[];
   homepage: string;
   id: number;

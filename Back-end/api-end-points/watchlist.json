@@ -1,0 +1,85 @@
+{
+  "watchlist": {
+    "list": {
+      "method": "GET",
+      "path": "/api/watchlist",
+      "auth": "Bearer token",
+      "query_params": {
+        "page": "number (default 1)",
+        "page_size": "number (default 20)",
+        "search": ""
+      },
+      "responses": {
+        "200": {
+          "data": {
+            "page": 1,
+            "page_size": 20,
+            "total_pages": 5,
+            "total_items": 100,
+            "results": [
+              {
+                "movie_id": 1197137,
+                "title": "Black Phone 2",
+                "poster_path": "/xUWUODKPIilQoFUzjHM6wKJkP3Y.jpg",
+                "release_date": "2025-10-15",
+                "added_at": "2025-11-15T12:00:00Z"
+              }
+            ]
+          },
+          "message": "Watchlist fetched successfully",
+          "success": true,
+          "errors": []
+        }
+      }
+    },
+    "add": {
+      "method": "POST",
+      "path": "/api/watchlist",
+      "auth": "Bearer token",
+      "request_body": {
+        "movie_id": "number"
+      },
+      "responses": {
+        "201": {
+          "data": {
+            "movie_id": 1197137,
+            "title": "Black Phone 2",
+            "added_at": "2025-11-15T12:00:00Z"
+          },
+          "message": "Movie added to watchlist successfully",
+          "success": true,
+          "errors": []
+        }
+      }
+    },
+    "remove": {
+      "method": "DELETE",
+      "path": "/api/watchlist/{movie_id}",
+      "auth": "Bearer token",
+      "responses": {
+        "204": {
+          "data": {},
+          "message": "Movie removed from watchlist successfully",
+          "success": true,
+          "errors": []
+        }
+      }
+    },
+    "check": {
+      "method": "GET",
+      "path": "/api/watchlist/{movie_id}/exists",
+      "auth": "Bearer token",
+      "responses": {
+        "200": {
+          "data": {
+            "movie_id": 1197137,
+            "exists": true
+          },
+          "message": "Watchlist status fetched successfully",
+          "success": true,
+          "errors": []
+        }
+      }
+    }
+  }
+}

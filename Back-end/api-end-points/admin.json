@@ -1,0 +1,229 @@
+{
+  "endpoints": {
+    "admin": {
+      "summary": {
+        "method": "GET",
+        "path": "/api/admin/summary",
+        "auth": "Bearer token (admin)",
+        "responses": {
+          "200": {
+            "data": {
+              "total_users": 1234,
+              "ai_usage_month": 5678,
+              "flagged_content_count": 12,
+              "active_sessions": 34
+            },
+            "message": "Summary metrics fetched successfully",
+            "success": true,
+            "errors": []
+          }
+        }
+      },
+      "analytics": {
+        "user_growth": {
+          "method": "GET",
+          "path": "/api/admin/analytics/users",
+          "auth": "Bearer token (admin)",
+          "responses": {
+            "200": {
+              "data": [
+                { "date": "2025-01-01", "signups": 12 },
+                { "date": "2025-01-02", "signups": 15 }
+              ],
+              "message": "User growth data fetched successfully",
+              "success": true,
+              "errors": []
+            }
+          }
+        },
+        "ai_usage": {
+          "method": "GET",
+          "path": "/api/admin/analytics/ai-usage",
+          "auth": "Bearer token (admin)",
+          "responses": {
+            "200": {
+              "data": [
+                { "date": "2025-01-01", "queries": 200 },
+                { "date": "2025-01-02", "queries": 250 }
+              ],
+              "message": "AI usage data fetched successfully",
+              "success": true,
+              "errors": []
+            }
+          }
+        }
+      },
+      "reviews": {
+        "pending": {
+          "method": "GET",
+          "path": "/api/admin/reviews/pending",
+          "auth": "Bearer token (admin)",
+          "query_params": {
+            "page": "number (default 1)",
+            "page_size": "number (default 20)"
+          },
+          "responses": {
+            "200": {
+              "data": [
+                {
+                  "id": 101,
+                  "username": "John Doe",
+                  "movie_title": "Inception",
+                  "review_date": "2024-03-15",
+                  "rating": 4,
+                  "review_text": "Absolutely mind-blowing! Best sci-fi movie ever made."
+                }
+              ],
+              "message": "Pending reviews fetched successfully",
+              "success": true,
+              "errors": []
+            }
+          }
+        },
+        "approve": {
+          "method": "POST",
+          "path": "/api/admin/reviews/approve",
+          "auth": "Bearer token (admin)",
+          "request_body": {
+            "review_id": "number"
+          },
+          "responses": {
+            "200": {
+              "data": {},
+              "message": "Review approved successfully",
+              "success": true,
+              "errors": []
+            }
+          }
+        },
+        "delete": {
+          "method": "POST",
+          "path": "/api/admin/reviews/delete",
+          "auth": "Bearer token (admin)",
+          "request_body": {
+            "review_id": "number"
+          },
+          "responses": {
+            "200": {
+              "data": {},
+              "message": "Review deleted successfully",
+              "success": true,
+              "errors": []
+            }
+          }
+        }
+      },
+      "flagged_content": {
+        "list": {
+          "method": "GET",
+          "path": "/api/admin/flagged",
+          "auth": "Bearer token (admin)",
+          "query_params": {
+            "page": "number (default 1)",
+            "page_size": "number (default 20)"
+          },
+          "responses": {
+            "200": {
+              "data": [
+                {
+                  "id": 301,
+                  "type": "Review",
+                  "severity": "high",
+                  "reason": "Inappropriate language in review for 'The Dark Knight'",
+                  "reported_by": {
+                    "user_id": 4521,
+                    "username": "Anonymous4521"
+                  },
+                  "content": {
+                    "username": "Alex Johnson",
+                    "movie_title": "The Dark Knight",
+                    "review_date": "2024-03-15",
+                    "rating": 4,
+                    "review_text": "Absolutely mind-blowing! Best sci-fi movie ever made."
+                  },
+                  "actions": ["resolve"]
+                }
+              ],
+              "message": "Flagged content fetched successfully",
+              "success": true,
+              "errors": []
+            }
+          }
+        },
+        "create": {
+          "method": "POST",
+          "path": "/api/admin/flagged",
+          "auth": "Bearer token (admin)",
+          "request_body": {
+            "type": "string",
+            "severity": "string",
+            "reason": "string",
+            "content_id": "number",
+            "reported_by": "number (user_id)"
+          },
+          "responses": {
+            "201": {
+              "data": {
+                "id": 302,
+                "type": "Review",
+                "severity": "high",
+                "reason": "Offensive language in review",
+                "reported_by": {
+                  "user_id": 4522,
+                  "username": "Anonymous4522"
+                },
+                "content": {
+                  "username": "John Doe",
+                  "movie_title": "Inception",
+                  "review_date": "2024-03-16",
+                  "rating": 5,
+                  "review_text": "Great movie!"
+                }
+              },
+              "message": "Flagged content created successfully",
+              "success": true,
+              "errors": []
+            }
+          }
+        },
+        "update": {
+          "method": "PUT",
+          "path": "/api/admin/flagged/{id}",
+          "auth": "Bearer token (admin)",
+          "request_body": {
+            "severity": "string",
+            "reason": "string",
+            "status": "string (e.g., resolved, pending)"
+          },
+          "responses": {
+            "200": {
+              "data": {
+                "id": 301,
+                "type": "Review",
+                "severity": "medium",
+                "reason": "Updated reason",
+                "status": "resolved"
+              },
+              "message": "Flagged content updated successfully",
+              "success": true,
+              "errors": []
+            }
+          }
+        },
+        "delete": {
+          "method": "DELETE",
+          "path": "/api/admin/flagged/{id}",
+          "auth": "Bearer token (admin)",
+          "responses": {
+            "204": {
+              "data": {},
+              "message": "Flagged content deleted successfully",
+              "success": true,
+              "errors": []
+            }
+          }
+        }
+      }
+    }
+  }
+}
