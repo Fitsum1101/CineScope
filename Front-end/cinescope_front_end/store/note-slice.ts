@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { Note } from "@/app/notes/page";
 import { RootState } from ".";
@@ -23,6 +23,7 @@ const noteSlice = createSlice({
     addNote: (state, action: PayloadAction<Note>) => {
       state.notes.push(action.payload);
     },
+
     toggelSelectedNote: (state, action: PayloadAction<Note>) => {
       const noteIndex = state.selectedNote.findIndex(
         (not) => not.id === action.payload.id
