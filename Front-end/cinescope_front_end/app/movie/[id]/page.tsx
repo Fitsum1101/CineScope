@@ -13,7 +13,7 @@ import { RelatedMoviesSection } from "../_components/related-movies-section";
 import { ReviewsSection } from "../_components/reviews-section";
 
 import { movietailQueryOptions } from "@/utils/queryOptions";
-import { formatRuntime } from "@/utils/lema";
+// import { formatRuntime } from "@/utils/lema";
 import { CinematicSpinner } from "@/ui/cinematic-spinner";
 
 export default function MovieDetailsPage() {
@@ -63,7 +63,7 @@ export default function MovieDetailsPage() {
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Duration</span>
                         <span className="font-medium text-foreground">
-                          {formatRuntime(data.runtime)}
+                          {data.runtime}
                         </span>
                       </div>
                       <div className="flex justify-between">

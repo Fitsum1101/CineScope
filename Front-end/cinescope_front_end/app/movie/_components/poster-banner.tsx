@@ -4,7 +4,7 @@ import { Heart, Check, Star } from "lucide-react";
 import { useState } from "react";
 
 import { Movie } from "@/types/movie";
-import { formatRuntime } from "@/utils/lema";
+// import { formatRuntime } from "@/utils/lema";
 
 interface PosterBannerProps {
   movie: Movie;
@@ -76,7 +76,7 @@ export function PosterBanner({
                     {movie.vote_average}/10
                   </span>
                   <span className="text-muted-foreground">
-                    {formatRuntime(movie.runtime)}
+                    {/* {formatRuntime(movie.runtime)} */}
                   </span>
                   <div className="flex gap-2">
                     {movie.genres.map((g) => (
