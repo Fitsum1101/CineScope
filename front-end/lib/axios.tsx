@@ -12,10 +12,13 @@ axiosInstance.interceptors.request.use(function (config) {
   //   config.headers?.set("Content-Type", "multipart/form-data");
   // } else {
 
-  config.headers?.set("Content-Type", "application/json");
-  config.headers?.set("Accept", "application/json");
+  config.headers.set("Content-Type", "application/json");
+  config.headers.set("Accept", "application/json");
 
-  config.headers?.set("Authorization", `Bearer ${"xkxxk"}`);
+  config.headers.set(
+    "Authorization",
+    `Bearer ${process.env.TMDB_ACCESS_TOKEN}`
+  );
   // Do something before request is sent
   return config;
 });

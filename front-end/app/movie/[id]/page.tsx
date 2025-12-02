@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams } from "next/navigation.js";
 
 import {
   CastCrewSection,
   OverviewSection,
-} from "../_components/overview-section.tsx";
-import { PosterBanner } from "../_components/poster-banner";
-import { RelatedMoviesSection } from "../_components/related-movies-section";
-import { ReviewsSection } from "../_components/reviews-section";
+} from "../_components/overview-section.tsx.js";
+import { PosterBanner } from "../_components/poster-banner.js";
+import { RelatedMoviesSection } from "../_components/related-movies-section.js";
+import { ReviewsSection } from "../_components/reviews-section.js";
 
 // import { formatRuntime } from "@/utils/lema";
 import { CinematicSpinner } from "@/ui/cinematic-spinner";
