@@ -1,3 +1,4 @@
+import { SearchState } from "@/reducers/searchReducer";
 import { apiSlice } from "@/store/apiSlice";
 import { Movie } from "@/types/movie";
 
@@ -27,7 +28,7 @@ export const moveSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
-    searchMovieQueryOptions: builder.query<Movie[], string>({
+    searchMovieQueryOptions: builder.query<Movie[], SearchState>({
       query: (params) => ({
         url: `/search/movie`,
         method: "GET",

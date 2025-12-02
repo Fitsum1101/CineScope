@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 import {
@@ -12,9 +11,9 @@ import { PosterBanner } from "../_components/poster-banner";
 import { RelatedMoviesSection } from "../_components/related-movies-section";
 import { ReviewsSection } from "../_components/reviews-section";
 
-import { movietailQueryOptions } from "@/utils/queryOptions";
 // import { formatRuntime } from "@/utils/lema";
 import { CinematicSpinner } from "@/ui/cinematic-spinner";
+import { useMovietailQueryOptionsQuery } from "@/services/moveSlice.js";
 
 export default function MovieDetailsPage() {
   const [isWatchlisted, setIsWatchlisted] = useState(false);
@@ -22,7 +21,10 @@ export default function MovieDetailsPage() {
   const [rating, setRating] = useState(0);
 
   const { id } = useParams();
-  const { data, isLoading } = useQuery(movietailQueryOptions(id));
+
+  const movieId = id && typeof id === "string" ? +id : 0;
+
+  const { data, isLoading } = useMovietailQueryOptionsQuery(movieId);
 
   return (
     <>

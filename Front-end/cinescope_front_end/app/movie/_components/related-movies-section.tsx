@@ -1,19 +1,18 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useRef } from "react";
 
-import { relatedMovieQueryOptions } from "@/utils/queryOptions";
 import Link from "next/link";
+import { useRelatedMovesQuery } from "@/services/moveSlice";
 
 export function RelatedMoviesSection() {
   const scrollContainer = useRef<HTMLDivElement>(null);
 
   const { id } = useParams();
 
-  const { data, error, isLoading } = useQuery(relatedMovieQueryOptions(id));
+  const { data, error, isLoading } = useRelatedMovesQuery(Number(id));
 
   if (!data) {
     return;

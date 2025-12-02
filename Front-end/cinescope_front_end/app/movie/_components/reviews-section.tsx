@@ -2,14 +2,13 @@
 
 import { useParams } from "next/navigation";
 
-import { reivewQueryOptions } from "@/utils/queryOptions";
-import { useQuery } from "@tanstack/react-query";
 import { Review } from "@/types/review";
 import { Star } from "lucide-react";
+import { useReivewQueryOptionsQuery } from "@/services/moveSlice";
 
 export function ReviewsSection() {
   const { id } = useParams();
-  const { data } = useQuery(reivewQueryOptions(id));
+  const { data } = useReivewQueryOptionsQuery(Number(id));
 
   if (!data) {
     return;
@@ -22,7 +21,7 @@ export function ReviewsSection() {
         User Reviews
       </h2>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {data.map((review: Review, index) => (
+        {data.map((review, index) => (
           <div
             key={index}
             className="flex flex-col p-6 border rounded-lg bg-card border-border glow-hover"
@@ -34,9 +33,9 @@ export function ReviewsSection() {
                   {review.created_at}
                 </p>
               </div>
-              {/* <div className="flex items-center justify-center w-10 h-10 font-bold rounded-full bg-accent text-accent-foreground">
-                {review.author_details.rating}
-              </div> */}
+              <div className="flex items-center justify-center w-10 h-10 font-bold rounded-full bg-accent text-accent-foreground">
+                {review.vote_average}
+              </div>
             </div>
             <p className="flex-1 leading-relaxed text-foreground">
               {review.content}

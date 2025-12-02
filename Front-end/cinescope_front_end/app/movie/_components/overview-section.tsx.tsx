@@ -1,5 +1,4 @@
-import { moiveCastQueryOptions } from "@/utils/queryOptions";
-import { useQuery } from "@tanstack/react-query";
+import { useMoiveCastQueryOptionsQuery } from "@/services/moveSlice";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 
@@ -35,7 +34,7 @@ export function OverviewSection({ overview }: { overview: string }) {
 export function CastCrewSection() {
   const { id } = useParams();
 
-  const { data } = useQuery(moiveCastQueryOptions(id));
+  const { data } = useMoiveCastQueryOptionsQuery(Number(id));
 
   if (!data) {
     return;

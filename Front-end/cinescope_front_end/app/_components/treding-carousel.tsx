@@ -6,12 +6,12 @@ import { useState } from "react";
 import Link from "next/link";
 
 import { Movie } from "@/types/movie";
-import { tradingMoviesQueryOptions } from "@/utils/queryOptions";
+import { useTradingMoviesQueryOptionsQuery } from "@/services/moveSlice";
 
 export default function TrendingCarousel() {
   const [scrollPosition, setScrollPosition] = useState(0);
 
-  const { data, error, isLoading } = useQuery(tradingMoviesQueryOptions());
+  const { data, error, isLoading } = useTradingMoviesQueryOptionsQuery();
 
   if (!data) {
     return;

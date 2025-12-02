@@ -1,13 +1,13 @@
 "use client";
 
-import { tradingMoviesQueryOptions } from "@/utils/queryOptions";
 import { getPublicAbsoluteURL } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
 import ImageSlideshow from "./image-slidershow";
+
 import { Play, Sparkles } from "lucide-react";
+import { useTradingMoviesQueryOptionsQuery } from "@/services/moveSlice";
 
 export default function HeroBanner() {
-  const { data } = useQuery(tradingMoviesQueryOptions());
+  const { data } = useTradingMoviesQueryOptionsQuery();
 
   return (
     <section className="relative w-full h-screen overflow-hidden ">

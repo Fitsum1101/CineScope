@@ -1,15 +1,8 @@
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 
-import {
-  discoverMoviesQueryOptions,
-  movietailQueryOptions,
-  tradingMoviesQueryOptions,
-} from "@/utils/queryOptions";
 import { CinematicSpinner } from "@/ui/cinematic-spinner";
 import { SearchState } from "@/reducers/searchReducer";
 import { Movie } from "@/types/movie";
@@ -17,7 +10,7 @@ import { Movie } from "@/types/movie";
 import { genere } from "@/types/genere";
 import { genres } from "@/constants/genres";
 import { useRouter } from "next/navigation";
-import Loading from "@/app/loading";
+import { useSearchMovieQueryOptionsQuery } from "@/services/moveSlice";
 
 export default function MovieGrid({
   state,
@@ -28,14 +21,7 @@ export default function MovieGrid({
   genere: genere;
   handledSearchedMovies: (movies: Movie[]) => void;
 }) {
-  const { data, isLoading, isSuccess } = useQuery(
-    state.query.length > 1
-      ? discoverMoviesQueryOptions(state)
-      : tradingMoviesQueryOptions()
-  );
-
-  const router = useRouter();
-  const queryClient = useQueryClient();
+  const { data, isLoading, isSuccess } = useSearchMovieQueryOptionsQuery(state);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -51,30 +37,6 @@ export default function MovieGrid({
     return mov.genre_ids.includes(genere.id) && mov.vote_average > 2;
   });
 
-  const handleClick = async (id: number) => {
-    setLoading(true);
-    try {
-      await queryClient.prefetchQuery(movietailQueryOptions(id));
-
-      router.push(`/movie/${id}`);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // if (loading)
-  //   return (
-  //     <div className="absolute inset-0 flex justify-center items-center bg-amber-500 bg-background/70">
-  //       <CinematicSpinner size="lg" />
-  //     </div>
-  //   );
-
-  if (genere.name !== "All" && moveData.length === 0) {
-    return <MovesNotFound />;
-  }
-
   return (
     <>
       <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6`}>
@@ -83,7 +45,7 @@ export default function MovieGrid({
           <div
             key={movie.id}
             className="cursor-pointer"
-            onClick={() => handleClick(movie.id)}
+            // onClick={() => handleClick(movie.id)}
           >
             <div className="h-full cursor-pointer group">
               <div className="relative mb-4 overflow-hidden rounded-lg glow-hover">
