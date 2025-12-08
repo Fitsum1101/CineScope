@@ -9,11 +9,6 @@ export default function ImageSlideshow({ moves }: { moves: Movie[] }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => {
-        console.log({
-          prevIndex: prevIndex < moves.length - 1,
-          len: moves.length,
-        });
-
         return prevIndex < moves.length - 1 ? prevIndex + 1 : 0;
       });
     }, 5000);

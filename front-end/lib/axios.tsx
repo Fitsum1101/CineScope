@@ -1,39 +1,37 @@
 import { createAxiosInstance } from "@/utils/axios";
 
+const proxyUrl = "https://api.allorigins.win/raw?url=";
+const tmdbUrl = `https://api.themoviedb.org/3/`;
+
 const axiosInstance = createAxiosInstance({
-  url: "https://api.themoviedb.org/3",
-  timeout: 1000,
+  url: `${tmdbUrl}`,
+  timeout: 10000,
 });
 
-// Add a request interceptor
-axiosInstance.interceptors.request.use(function (config) {
-  // 👉 If request contains FormData, set multipart header
-  // if (config.data instanceof FormData) {
-  //   config.headers?.set("Content-Type", "multipart/form-data");
-  // } else {
+axiosInstance.interceptors.request.use((config) => {
+  config.headers?.set("Content-Type", "application/json");
+  config.headers?.set("Accept", "application/json");
 
-  config.headers.set("Content-Type", "application/json");
-  config.headers.set("Accept", "application/json");
+  // config.headers.set(
+  //   "Authorization",
+  //   "8fd7da46674eb421b7ed2fadd60f0ab0eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4ZmQ3ZGE0NjY3NGViNDIxYjdlZDJmYWRkNjBmMGFiMCIsIm5iZiI6MTc2MjQzNzY3OC43MDcsInN1YiI6IjY5MGNhYTJlM2IyZWRjNDg0ZTA3MTU3MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Ul8NZBhxn_B7s_vbPYENfhfNwsF63yBDonoBLEleaNQ"
+  // );\
 
-  config.headers.set(
-    "Authorization",
-    `Bearer ${process.env.TMDB_ACCESS_TOKEN}`
-  );
-  // Do something before request is sent
+  config.params = {
+    ...config.params,
+    api_key: "8fd7da46674eb421b7ed2fadd60f0ab0",
+  };
+
   return config;
 });
 
 // axiosInstance.interceptors.response.use(undefined, async (error) => {
+//   console.log(error);
 //   if (error.response?.status === 401) {
-//     await refreshToken();
 //     return axiosInstance(error.config);
 //   }
+
 //   throw error;
 // });
-
-// Refresh token logic
-const refreshToken = async () => {
-  // Perform refresh token logic here
-};
 
 export default axiosInstance;

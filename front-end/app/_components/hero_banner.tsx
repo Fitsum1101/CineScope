@@ -7,7 +7,9 @@ import { Play, Sparkles } from "lucide-react";
 import { useTradingMoviesQueryOptionsQuery } from "@/services/moveSlice";
 
 export default function HeroBanner() {
-  const { data } = useTradingMoviesQueryOptionsQuery();
+  const { data, error } = useTradingMoviesQueryOptionsQuery();
+
+  console.log({ error });
 
   return (
     <section className="relative w-full h-screen overflow-hidden ">

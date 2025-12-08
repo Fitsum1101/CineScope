@@ -18,7 +18,7 @@ export const moveSlice = apiSlice.injectEndpoints({
     }),
     tradingMoviesQueryOptions: builder.query<Movie[], void>({
       query: () => ({
-        url: `/movie/now_playing?language=en-US&page=1`,
+        url: `/movie/now_playing?page=1`,
         method: "GET",
       }),
     }),

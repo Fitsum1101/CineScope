@@ -3,6 +3,7 @@
 import { Search, X } from "lucide-react";
 import { genres } from "@/constants/genres";
 import { DiscoveryFiltersProps } from "@/types/genere";
+import { Input } from "@/components/ui/input";
 
 let isNotTyping = true;
 
@@ -21,7 +22,7 @@ export default function DiscoveryFilters({
         </label>
         <div className="relative group">
           <Search className="absolute w-5 h-5 transition-colors pointer-events-none left-3 top-3 text-muted-foreground group-focus-within:text-primary" />
-          <input
+          <Input
             type="text"
             placeholder="Movie title or director..."
             value={isNotTyping ? "" : state.query}

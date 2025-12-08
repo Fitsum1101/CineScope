@@ -21,8 +21,10 @@ export default function MovieGrid({
   genere: genere;
   handledSearchedMovies: (movies: Movie[]) => void;
 }) {
-  const { data, isLoading, isSuccess } = useSearchMovieQueryOptionsQuery(state);
+  const { data, isSuccess, error } = useSearchMovieQueryOptionsQuery(state);
   const [loading, setLoading] = useState(false);
+
+  console.log({ error });
 
   useEffect(() => {
     if (isSuccess && data) {
@@ -101,7 +103,7 @@ export default function MovieGrid({
         ))}
       </div>
       {loading && (
-        <div className="fixed inset-0 flex justify-center items-center h-screen bg-background/70 ">
+        <div className="fixed inset-0 flex items-center justify-center h-screen bg-background/70 ">
           <CinematicSpinner size="lg" />
         </div>
       )}
