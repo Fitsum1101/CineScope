@@ -62,11 +62,13 @@ export default function MovieGrid({
           <div className="h-full cursor-pointer group">
             <div className="relative mb-4 overflow-hidden rounded-lg glow-hover">
               {/* Poster Image */}
-              <img
-                src={`https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`}
-                alt={movie.title}
-                className="object-cover w-full transition-transform duration-500 h-96 group-hover:scale-110"
-              />
+              <div className="h-72">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`}
+                  alt={movie.title}
+                  className="w-full h-full transition-transform duration-500 group-hover:scale-110"
+                />
+              </div>
 
               {/* Overlay on Hover */}
               <div className="absolute inset-0 flex flex-col justify-end p-4 transition-opacity duration-300 opacity-0 bg-gradient-to-t from-background via-transparent to-transparent group-hover:opacity-100">

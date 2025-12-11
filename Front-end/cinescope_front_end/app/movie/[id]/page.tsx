@@ -76,14 +76,14 @@ export default function MovieDetailsPage() {
                       Genres
                     </span>
                     <div className="flex flex-wrap gap-2">
-                      {data.genres.map((g) => (
+                      {/* {data.genres.map((g) => (
                         <span
                           key={g.id}
                           className="px-3 py-1 text-xs rounded-full bg-secondary text-secondary-foreground"
                         >
                           {g.name}
                         </span>
-                      ))}
+                      ))} */}
                     </div>
                   </div>
                 </div>

@@ -1,7 +1,8 @@
 "use client";
 
+import { Movie } from "@/types/movie";
 import { useEffect, useState } from "react";
-import { Movie } from "./treding-carousel";
+// import { Movie } from "./treding-carousel";
 
 export default function ImageSlideshow({ moves }: { moves: Movie[] }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);

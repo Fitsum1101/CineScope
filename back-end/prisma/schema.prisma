@@ -1,0 +1,157 @@
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+
+model User {
+  id           String    @id @default(uuid()) @db.Char(36)
+  username     String    @unique @db.VarChar(150)
+  email        String    @unique @db.VarChar(254)
+  passwordHash String    @map("password_hash") @db.VarChar(255)
+
+  role         Role      @default(user)
+  isActive     Boolean   @map("is_active") @default(true)
+  isStaff      Boolean   @map("is_staff") @default(false)
+
+  dateJoined   DateTime  @map("date_joined") @default(now())
+  lastLogin    DateTime? @map("last_login")
+  createdAt    DateTime  @map("created_at") @default(now())
+  updatedAt    DateTime  @map("updated_at") @updatedAt
+
+  // relations
+  watchlist    WatchlistItem[]
+  reviews      Review[]
+  flaggedBy    FlaggedContent[] @relation("reportedBy")
+  aiUsages     AIUsage[]
+  searches     SearchHistory[]
+
+  @@index([role])
+  @@index([dateJoined])
+  @@map("users")
+}
+
+model Movie {
+  id           Int       @id   @unique                             
+  title        String    @db.VarChar(500)
+  posterPath   String?   @map("poster_path") @db.VarChar(500)
+  backdropPath String?   @map("backdrop_path") @db.VarChar(500)
+  releaseDate  DateTime? @map("release_date")
+  popularity   Float?
+  rating       Float?    @map("vote_average")
+  voteCount    Int?      @map("vote_count")
+  overview     String?   @db.Text
+  genreIds     String?   @map("genre_ids") @db.VarChar(255)
+  // relations
+  watchlisted  WatchlistItem[]
+  reviews      Review[]
+
+  createdAt    DateTime  @map("created_at") @default(now())
+  updatedAt    DateTime  @map("updated_at") @updatedAt
+
+  @@map("movies")
+}
+
+
+model WatchlistItem {
+  id        String  @id @default(uuid()) @db.Char(36)
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String  @map("user_id") @db.Char(36)
+  movie     Movie   @relation(fields: [movieId], references: [id])
+  movieId   Int     @map("movie_id")
+  addedAt   DateTime @map("added_at") @default(now())
+
+  @@unique([userId, movieId])
+  @@index([userId])
+  @@map("watchlist")
+}
+
+model Review {
+  id         String   @id @default(uuid()) @db.Char(36)
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String   @map("user_id") @db.Char(36)
+  movie      Movie    @relation(fields: [movieId], references: [id])
+  movieId    Int      @map("movie_id")
+  rating     Int      @db.TinyInt
+  reviewText String?  @map("review_text") @db.Text
+  createdAt  DateTime @map("created_at") @default(now())
+  updatedAt  DateTime @map("updated_at") @updatedAt
+  isFlagged  Boolean  @map("is_flagged") @default(false)
+  isApproved Boolean  @map("is_approved") @default(true)
+
+  flagged    FlaggedContent[]
+
+  @@index([movieId])
+  @@index([userId])
+  @@map("reviews")
+}
+
+model FlaggedContent {
+  id         String       @id @default(uuid()) @db.Char(36)
+  review     Review?      @relation(fields: [reviewId], references: [id])
+  reviewId   String?      @map("review_id") @db.Char(36)
+  type       String       // "Review" | "Movie" | "User" etc.
+  severity   FlagSeverity @default(medium)
+  reason     String       @db.Text
+  reportedBy User         @relation("reportedBy", fields: [reportedById], references: [id])
+  reportedById String     @map("reported_by") @db.Char(36)
+  createdAt  DateTime     @map("created_at") @default(now())
+  resolved   Boolean      @default(false)
+  resolvedAt DateTime?    @map("resolved_at")
+
+  @@index([severity])
+  @@index([reportedById])
+  @@map("flagged_content")
+}
+
+model AIUsage {
+  id             String   @id @default(uuid()) @db.Char(36)
+  user           User?    @relation(fields: [userId], references: [id])
+  userId         String?  @map("user_id") @db.Char(36)
+  prompt         String   @db.Text
+  responseLength Int?
+  tokensUsed     Int?
+  createdAt      DateTime @map("created_at") @default(now())
+
+  @@index([userId])
+  @@map("ai_usage")
+}
+
+model SearchHistory {
+  id        String   @id @default(uuid()) @db.Char(36)
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?  @map("user_id") @db.Char(36)
+  query     String   @db.VarChar(1000)
+  createdAt DateTime @map("created_at") @default(now())
+
+  @@index([userId])
+  @@map("search_history")
+}
+
+model AnalyticsSnapshot {
+  id           String   @id @default(uuid()) @db.Char(36)
+  date         DateTime @db.Date
+  totalUsers   Int      @map("total_users")
+  aiUsage      Int      @map("ai_usage")
+  flaggedCount Int      @map("flagged_count")
+  activeSessions Int    @map("active_sessions")
+  createdAt    DateTime @map("created_at") @default(now())
+
+  @@index([date])
+  @@map("analytics_snapshot")
+}
+enum Role {
+  user
+  admin
+}
+
+enum FlagSeverity {
+  low
+  medium
+  high
+}
