@@ -1,5 +1,5 @@
 const express = require("express");
-const { notFoundHandler, errorHandler } = require("../src/utils/errorHandler");
+const { notFoundHandler, errorHandler } = require("./utils/errorHandler");
 
 const app = express();
 const port = process.env.PORT || 3000;
