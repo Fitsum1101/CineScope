@@ -54,8 +54,8 @@ const generateRefreshToken = (user) => {
  */
 const verifyAccessToken = (token) => {
   const decoded = jwt.verify(token, process.env.JWT_SECRET, {
-    audience: "boss-grand-garment-api",
-    issuer: "boss-grand-garment-system",
+    audience: "cinscop-api",
+    issuer: "cinscop-system",
   });
 
   if (decoded.type !== "access") {

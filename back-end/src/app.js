@@ -1,11 +1,8 @@
 const express = require("express");
+const routeIndex = require("./index");
 const { notFoundHandler, errorHandler } = require("./utils/errorHandler");
 
 const app = express();
-const port = process.env.PORT || 3000;
-
-app.use(notFoundHandler);
-app.use(errorHandler);
 
 app.get("/", (_, res) => {
   res.json({
@@ -16,5 +13,10 @@ app.get("/", (_, res) => {
     server_time: `${new Date().toLocaleString()} ⌛`,
   });
 });
+
+app.use("api/v1/users", routeIndex.users.userRoutes);
+
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 module.exports = app;
