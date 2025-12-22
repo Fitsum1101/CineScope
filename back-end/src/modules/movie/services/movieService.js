@@ -192,16 +192,16 @@ const movieService = {
     return watchListMovie;
   },
 
-  toggleWatchedMovie: async (id, isWatched) => {
-    await prisma.watchlistItem.update({
+  movieExisteInWatchedMovie: async (movieId, userId) => {
+    const watchedMovie = await prisma.watchlistItem.findFirst({
       where: {
-        id,
-      },
-      data: {
-        isWatched: isWatched,
+        movieId,
+        userId,
       },
     });
-    return updatedMovie;
+    if (!watchedMovie)
+      throw new ApiError(status.NOT_FOUND, "watched movie not found");
+    return watchedMovie;
   },
 
   deleteFromWatchList: async (id) => {
@@ -212,17 +212,49 @@ const movieService = {
     });
   },
 
-  movieExisteInWatchedMovie: async (movieId, userId) => {
-    const watchedMovie = await prisma.watchlistItem.findFirst({
+  isInWatchedMovie: async (movieId, userId) => {
+    const watchedMovie = await prisma.watchedMovie.findFirst({
       where: {
+        movieId,
+        userId,
+      },
+    });
+    return !!watchedMovie;
+  },
+
+  addToWatchedMovie: async (movieId, userId) => {
+    const watchedMovie = await prisma.watchedMovie.create({
+      data: {
         movieId,
         userId,
         isWatched: true,
       },
     });
+    return watchedMovie;
+  },
+
+  getWatchedMovieById: async (movieId, userId) => {
+    const watchedMovie = await prisma.watchedMovie.findFirst({
+      where: {
+        movieId,
+        userId,
+      },
+    });
     if (!watchedMovie)
       throw new ApiError(status.NOT_FOUND, "watched movie not found");
     return watchedMovie;
+  },
+
+  toggleWatchedMovie: async (id, isWatched) => {
+    await prisma.watchedMovie.update({
+      where: {
+        id,
+      },
+      data: {
+        isWatched: !isWatched,
+      },
+    });
+    return updatedMovie;
   },
 
   addMovie: async (movieData) => {
@@ -231,6 +263,7 @@ const movieService = {
     });
     return movie;
   },
+
   getMovieWatchlist: async (userId) => {
     const watchlist = await prisma.watchlistItem.findMany({
       where: {

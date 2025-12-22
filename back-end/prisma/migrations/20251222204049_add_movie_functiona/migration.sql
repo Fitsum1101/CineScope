@@ -42,9 +42,24 @@ CREATE TABLE `watchlist` (
     `user_id` CHAR(36) NOT NULL,
     `movie_id` INTEGER NOT NULL,
     `added_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
 
     INDEX `watchlist_user_id_idx`(`user_id`),
     UNIQUE INDEX `watchlist_user_id_movie_id_key`(`user_id`, `movie_id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `watched_movies` (
+    `id` CHAR(36) NOT NULL,
+    `user_id` CHAR(36) NOT NULL,
+    `movie_id` INTEGER NOT NULL,
+    `is_watched` BOOLEAN NOT NULL DEFAULT false,
+    `added_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
+
+    INDEX `watched_movies_user_id_idx`(`user_id`),
+    UNIQUE INDEX `watched_movies_user_id_movie_id_key`(`user_id`, `movie_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -125,6 +140,9 @@ ALTER TABLE `watchlist` ADD CONSTRAINT `watchlist_user_id_fkey` FOREIGN KEY (`us
 
 -- AddForeignKey
 ALTER TABLE `watchlist` ADD CONSTRAINT `watchlist_movie_id_fkey` FOREIGN KEY (`movie_id`) REFERENCES `movies`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `watched_movies` ADD CONSTRAINT `watched_movies_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `reviews` ADD CONSTRAINT `reviews_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

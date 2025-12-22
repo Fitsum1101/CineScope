@@ -106,7 +106,6 @@ router
   .post(
     authenticate,
     authorize(["user", "admin"]),
-    validate(movieValidation.addToWatchlist),
     movieController.addToWatchlist
   )
   .get(
@@ -117,19 +116,13 @@ router
   );
 
 router
-  .route("/:id/watchlist")
+  .route("/:id/watched_movie")
   .post(
     authenticate,
     authorize(["user", "admin"]),
     validate(movieValidation.movieIdParam),
     validate(movieValidation.toggleWatchedMovie),
     movieController.toggleWatchedMovie
-  )
-  .delete(
-    authenticate,
-    authorize(["user", "admin"]),
-    validate(movieValidation.movieIdParam),
-    movieController.deleteFromWatchlist
   );
 
 module.exports = router;

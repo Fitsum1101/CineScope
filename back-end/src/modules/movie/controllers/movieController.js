@@ -300,8 +300,6 @@ const addToWatchlist = catchAsync(async (req, res) => {
 
   const isMovieExstes = await movieService.getMovieById(data.id);
 
-  await movieService.movieExisteInWatchedMovie(data.id, user.id);
-
   if (!isMovieExstes) await movieService.addMovie(data);
 
   await movieService.addToWatchList(data.id, user.id);
@@ -321,9 +319,13 @@ const toggleWatchedMovie = catchAsync(async (req, res) => {
   const { movieId } = req.body;
   const user = req.user;
 
-  const movie = await movieService.movieExisteInWatchedMovie(movieId, user.id);
+  const isMovieExists = await movieService.isInWatchedMovie(movieId, user.id);
 
-  await movieService.toggleWatchedMovie(movie.id, movie.isWatched);
+  if (!isMovieExists) await movieService.addToWatchedMovie(movieId, user.id);
+  else {
+    const movie = await movieService.getWatchedMovieById(movieId, user.id);
+    await movieService.toggleWatchedMovie(movie.id, movie.isWatched);
+  }
 
   return res
     .status(StatusCodes.OK)
