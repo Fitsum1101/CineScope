@@ -1,6 +1,5 @@
 const { status } = require("http-status");
 const ApiError = require("../utils/apiError");
-
 /**
  * Permission-Based Access Control middleware factory
  * Creates middleware that authorizes users based on their permissions

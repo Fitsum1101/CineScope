@@ -104,6 +104,7 @@ ApiError.conflict = function (message, errors = []) {
  * @param {Array} [errors=[]] - Additional error details.
  * @returns {ApiError} - A new instance of ApiError.
  */
+
 ApiError.internal = function (message, errors = []) {
   return ApiError.createError(500, message, errors);
 };

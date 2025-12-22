@@ -1,4 +1,4 @@
-const ApiError = require('./apiError');
+const ApiError = require("./apiError");
 
 /**
  * Middleware to handle 404 errors for routes that are not found.
@@ -10,7 +10,7 @@ const ApiError = require('./apiError');
  * @param {Function} next - Express next function.
  */
 const notFoundHandler = (req, res, next) => {
-  const error = new ApiError(404, 'Route Not Found');
+  const error = new ApiError(404, "Route Not Found");
   next(error);
 };
 
@@ -27,31 +27,17 @@ const notFoundHandler = (req, res, next) => {
  */
 const errorHandler = (err, req, res, _next) => {
   // Handle JSON parsing errors
-  if (err instanceof SyntaxError && err.type === 'entity.parse.failed' && err.status === 400) {
+  if (
+    err instanceof SyntaxError &&
+    err.type === "entity.parse.failed" &&
+    err.status === 400
+  ) {
     return res.status(400).json({
       success: false,
-      message: 'Invalid JSON payload',
+      message: "Invalid JSON payload",
       error: err.message,
       details: err.body,
     });
-  }
-
-  // Handle Mongoose validation errors
-  if (err.name === 'ValidationError') {
-    const messages = Object.values(err.errors).map(val => val.message);
-    err = new ApiError(400, 'Validation Error', messages);
-  }
-
-  // Handle Mongoose duplicate key errors
-  if (err.code && err.code === 11000) {
-    const message = 'Duplicate field value entered';
-    err = new ApiError(400, message);
-  }
-
-  // Handle Mongoose cast errors
-  if (err.name === 'CastError') {
-    const message = `Resource not found with id of ${err.value || req.params.id || 'unknown'}`;
-    err = new ApiError(404, message);
   }
 
   // If the error is an instance of ApiError, send the structured response
@@ -68,7 +54,7 @@ const errorHandler = (err, req, res, _next) => {
 
   res.status(500).json({
     success: false,
-    message: 'Internal Server Error',
+    message: "Internal Server Error",
   });
 };
 

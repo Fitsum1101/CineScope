@@ -40,7 +40,7 @@ const startServer = async () => {
     }
     console.log("✅ Database health check passed");
 
-    const PORT = process.env.PORT || 3000;
+    const PORT = process.env.PORT || 6767;
 
     server
       .listen(PORT, () => {

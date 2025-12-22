@@ -14,7 +14,8 @@ app.get("/", (_, res) => {
   });
 });
 
-app.use("api/v1/users", routeIndex.users.userRoutes);
+app.use("/api/v1/movies", routeIndex.movies.movieRoutes);
+app.use("/api/v1/users", routeIndex.users.userRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

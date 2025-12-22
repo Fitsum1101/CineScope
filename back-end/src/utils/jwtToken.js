@@ -8,13 +8,10 @@ const jwt = require("jsonwebtoken");
  */
 const generateAccessToken = (user) => {
   const payload = {
-    id: user._id,
+    id: user.id,
     username: user.username,
     isActive: user.isActive,
-    role: {
-      name: user.role.name,
-      id: user.role.id,
-    },
+    role: user.role,
     type: "access",
 
     iat: Math.floor(Date.now() / 1000),
@@ -22,8 +19,8 @@ const generateAccessToken = (user) => {
 
   return jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN || "8h",
-    audience: "boss-grand-garment-api",
-    issuer: "boss-grand-garment-system",
+    audience: "cinscope",
+    issuer: "cinscope",
   });
 };
 
@@ -41,8 +38,8 @@ const generateRefreshToken = (user) => {
 
   return jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
     expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
-    audience: "boss-grand-garment-api",
-    issuer: "boss-grand-garment-system",
+    audience: "cinscope-api",
+    issuer: "cinscope-system",
   });
 };
 
@@ -73,8 +70,8 @@ const verifyAccessToken = (token) => {
  */
 const verifyRefreshToken = (token) => {
   const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET, {
-    audience: "boss-grand-garment-api",
-    issuer: "boss-grand-garment-system",
+    audience: "cinscope-api",
+    issuer: "cinscope-api-system",
   });
 
   if (decoded.type !== "refresh") {
