@@ -294,6 +294,82 @@ const getMultipleMovies = catchAsync(async (req, res) => {
     );
 });
 
+const addToWatchlist = catchAsync(async (req, res) => {
+  const data = req.body;
+  const user = req.user;
+
+  const isMovieExstes = await movieService.getMovieById(data.id);
+
+  await movieService.movieExisteInWatchedMovie(data.id, user.id);
+
+  if (!isMovieExstes) await movieService.addMovie(data);
+
+  await movieService.addToWatchList(data.id, user.id);
+
+  return res
+    .status(StatusCodes.OK)
+    .json(
+      new ApiResponse(
+        StatusCodes.OK,
+        null,
+        "Movie added to watchlist successfully"
+      )
+    );
+});
+
+const toggleWatchedMovie = catchAsync(async (req, res) => {
+  const { movieId } = req.body;
+  const user = req.user;
+
+  const movie = await movieService.movieExisteInWatchedMovie(movieId, user.id);
+
+  await movieService.toggleWatchedMovie(movie.id, movie.isWatched);
+
+  return res
+    .status(StatusCodes.OK)
+    .json(
+      new ApiResponse(
+        StatusCodes.OK,
+        null,
+        "movie watched status toggled successfully"
+      )
+    );
+});
+
+const deleteFromWatchlist = catchAsync(async (req, res) => {
+  const { movieId } = req.params;
+  const user = req.user;
+
+  const movie = await movieService.movieExisteInWatchedMovie(movieId, user.id);
+
+  await movieService.deleteFromWatchList(movie.id);
+
+  return res
+    .status(StatusCodes.OK)
+    .json(
+      new ApiResponse(
+        StatusCodes.OK,
+        null,
+        "Movie deleted from watchlist successfully"
+      )
+    );
+});
+
+const getMovieWatchList = catchAsync(async (req, res) => {
+  const user = req.user;
+
+  const watchlist = await movieService.getMovieWatchlist(user.id);
+
+  return res
+    .status(StatusCodes.OK)
+    .json(
+      new ApiResponse(
+        StatusCodes.OK,
+        watchlist,
+        "User watchlist retrieved successfully"
+      )
+    );
+});
 module.exports = {
   getNowPlayingMovies,
   getPopularMovies,
@@ -311,4 +387,8 @@ module.exports = {
   getTrendingMovies,
   getMoviesByGenre,
   getMultipleMovies,
+  addToWatchlist,
+  toggleWatchedMovie,
+  deleteFromWatchlist,
+  getMovieWatchList,
 };

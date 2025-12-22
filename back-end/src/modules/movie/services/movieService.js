@@ -1,6 +1,8 @@
 // movieService.js
 require("dotenv").config();
 const axios = require("axios");
+const { prisma } = require("../../../lib/prisma");
+const { default: status } = require("http-status");
 
 // Create axios instance
 const tmdbApi = axios.create({
@@ -167,6 +169,78 @@ const movieService = {
       params: { include_image_language: includeImageLanguage },
     });
     return response.data;
+  },
+
+  getMovieById: async (movieId) => {
+    const movie = await prisma.movie.findFirst({
+      where: {
+        id: movieId,
+      },
+    });
+    if (!movie) false;
+
+    return movie;
+  },
+
+  addToWatchList: async (movieId, userId) => {
+    const watchListMovie = await prisma.watchlistItem.create({
+      data: {
+        movieId,
+        userId,
+      },
+    });
+    return watchListMovie;
+  },
+
+  toggleWatchedMovie: async (id, isWatched) => {
+    await prisma.watchlistItem.update({
+      where: {
+        id,
+      },
+      data: {
+        isWatched: isWatched,
+      },
+    });
+    return updatedMovie;
+  },
+
+  deleteFromWatchList: async (id) => {
+    return await prisma.watchlistItem.delete({
+      where: {
+        id,
+      },
+    });
+  },
+
+  movieExisteInWatchedMovie: async (movieId, userId) => {
+    const watchedMovie = await prisma.watchlistItem.findFirst({
+      where: {
+        movieId,
+        userId,
+        isWatched: true,
+      },
+    });
+    if (!watchedMovie)
+      throw new ApiError(status.NOT_FOUND, "watched movie not found");
+    return watchedMovie;
+  },
+
+  addMovie: async (movieData) => {
+    const movie = await prisma.movie.create({
+      data: movieData,
+    });
+    return movie;
+  },
+  getMovieWatchlist: async (userId) => {
+    const watchlist = await prisma.watchlistItem.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        movie: true,
+      },
+    });
+    return watchlist;
   },
 };
 

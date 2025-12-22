@@ -93,7 +93,6 @@ router
     movieController.getMovieImages
   );
 
-// Genre-based routes
 router
   .route("/genre/:genreId")
   .get(
@@ -102,22 +101,35 @@ router
     movieController.getMoviesByGenre
   );
 
-// Batch operations - might require authentication for rate limiting
 router
-  .route("/batch")
+  .route("/watchlist")
+  .post(
+    authenticate,
+    authorize(["user", "admin"]),
+    validate(movieValidation.addToWatchlist),
+    movieController.addToWatchlist
+  )
   .get(
     authenticate,
-    validate(movieValidation.getMultipleMovies),
-    movieController.getMultipleMovies
+    authorize(["user", "admin"]),
+    validate(movieValidation.movieIdParam),
+    movieController.getMovieWatchList
   );
 
-// Optional: Movie rating routes
-router.route("/:id/rate").post(
-  authenticate,
-  authorize(["user", "admin"]),
-  validate(movieValidation.movieIdParam),
-  validate(movieValidation.rateMovie)
-  // movieController.rateMovie
-);
+router
+  .route("/:id/watchlist")
+  .post(
+    authenticate,
+    authorize(["user", "admin"]),
+    validate(movieValidation.movieIdParam),
+    validate(movieValidation.toggleWatchedMovie),
+    movieController.toggleWatchedMovie
+  )
+  .delete(
+    authenticate,
+    authorize(["user", "admin"]),
+    validate(movieValidation.movieIdParam),
+    movieController.deleteFromWatchlist
+  );
 
 module.exports = router;

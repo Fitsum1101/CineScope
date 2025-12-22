@@ -69,8 +69,10 @@ model WatchlistItem {
   userId    String  @map("user_id") @db.Char(36)
   movie     Movie   @relation(fields: [movieId], references: [id])
   movieId   Int     @map("movie_id")
+  isWatched Boolean @map("is_watched") @default(false)
+  isInWatchlist Boolean @map("is_in_watchlist") @default(true)
   addedAt   DateTime @map("added_at") @default(now())
-
+  updatedAt DateTime @map("updated_at") @updatedAt
   @@unique([userId, movieId])
   @@index([userId])
   @@map("watchlist")
