@@ -7,16 +7,6 @@ const validate = require("../../../middleware/validatorMiddleware");
 const userValidation = require("../validations/userValidation");
 
 router
-  .route("/")
-  .post(validate(userValidation.createUser), userController.createUser)
-  .get(
-    authenticate,
-    authorize(["admin"]),
-    validate(userValidation.getUsers),
-    userController.getUsers
-  );
-
-router
   .route("/role/:roleId")
   .get(
     authenticate,
