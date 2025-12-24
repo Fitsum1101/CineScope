@@ -4,6 +4,9 @@ const { notFoundHandler, errorHandler } = require("./utils/errorHandler");
 
 const app = express();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.get("/", (_, res) => {
   res.json({
     message: "Welcome to the cinscop movie API",

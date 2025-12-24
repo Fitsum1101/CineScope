@@ -10,6 +10,7 @@ const {
 } = require("../../../utils/jwtToken");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
+const { password } = require("../../../utils/customJoi");
 
 // In-memory blacklist for refresh tokens (replace with Redis/DB in production)
 const blacklistedRefreshTokens = new Set();
