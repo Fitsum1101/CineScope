@@ -7,15 +7,6 @@ const validate = require("../../../middleware/validatorMiddleware");
 const userValidation = require("../validations/userValidation");
 
 router
-  .route("/role/:roleId")
-  .get(
-    authenticate,
-    authorize(["admin"]),
-    validate(userValidation.roleIdParam),
-    userController.getUsersByRole
-  );
-
-router
   .route("/:id")
   .get(
     authorize(["admin", "user"]),
@@ -23,7 +14,7 @@ router
     userController.getUser
   )
   .put(
-    authorize(["admin", "user"], { requireAll: false }),
+    authorize(["admin", "user"]),
     validate(userValidation.userIdParam),
     validate(userValidation.updateUser),
     userController.updateUser
@@ -49,19 +40,6 @@ router
     validate(userValidation.userIdParam),
     userController.reactivateUser
   );
-
-// router
-//   .route("/:id/permissions/:permissionId")
-//   .post(
-//     authorize(["user_update"]),
-//     validate(userValidation.userIdParam),
-//     userController.addCustomPermission
-//   )
-//   .delete(
-//     authorize(["user_update"]),
-//     validate(userValidation.userIdParam),
-//     userController.removeCustomPermission
-//   );
 
 router
   .route("/check-username/:username")

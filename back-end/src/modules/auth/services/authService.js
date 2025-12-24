@@ -19,7 +19,7 @@ const blacklistedRefreshTokens = new Set();
  * Helper: Check password match
  */
 const isPasswordMatch = async (user, password) => {
-  return await bcrypt.compare(password, user.password);
+  return await bcrypt.compare(password, user.passwordHash);
 };
 
 /**
@@ -91,40 +91,13 @@ const login = async (username, password) => {
 
   const user = await prisma.user.findUnique({
     where: { username: username.toLowerCase() },
-    include: {
-      role: {
-        include: {
-          permissions: {
-            include: {
-              permission: {
-                select: {
-                  id: true,
-                  name: true,
-                },
-              },
-            },
-          },
-        },
-      },
-      customPermissions: {
-        include: {
-          permission: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      },
-      employee: {
-        select: {
-          fullName: true,
-          employeeID: true,
-          department: true,
-          position: true,
-          employmentStatus: true,
-        },
-      },
+    omit: {
+      createdAt: true,
+      updatedAt: true,
+      passwordResetToken: true,
+      passwordResetExpires: true,
+      lockUntil: true,
+      loginAttempts: true,
     },
   });
 
@@ -136,29 +109,26 @@ const login = async (username, password) => {
   // }
 
   const match = await isPasswordMatch(user, password);
+
   if (!match) {
     await incrementLoginAttempts(user);
     throw new ApiError(status.FORBIDDEN, "Incorrect username or password");
   }
 
-  await resetLoginAttempts(user);
+  // await resetLoginAttempts(user);
   await prisma.user.update({
     where: { id: user.id },
     data: { lastLogin: new Date() },
   });
 
   // Merge role + custom permissions
-  const rolePermissions =
-    user.role?.permissions?.map((p) => p.permission) || [];
-  const customPermissions = user.customPermissions || [];
-  const permissions = [...new Set([...rolePermissions, ...customPermissions])];
 
   const { accessToken, refreshToken } = generateTokens(user);
 
   return {
     accessToken,
     refreshToken,
-    user: { ...user, password: undefined, permissions },
+    user: { ...user, password: undefined },
   };
 };
 
@@ -171,11 +141,20 @@ const register = async (userData) => {
   });
   if (existingUser)
     throw new ApiError(status.CONFLICT, "Username already exists");
+  const existingEmail = await prisma.user.findUnique({
+    where: { email: userData.email.toLowerCase() },
+  });
+  if (existingEmail)
+    throw new ApiError(status.CONFLICT, "Email already exists");
 
   const hashedPassword = await bcrypt.hash(userData.password, 12);
 
   return await prisma.user.create({
-    data: { ...userData, password: hashedPassword },
+    data: {
+      email: userData.email,
+      username: userData.username.toLowerCase(),
+      passwordHash: hashedPassword,
+    },
   });
 };
 
@@ -202,20 +181,17 @@ const resetPassword = async (token, newPassword) => {
       passwordResetToken: hashedToken,
       passwordResetExpires: { gt: new Date() },
     },
-    include: {
-      role: { include: { permissions: { include: { permission: true } } } },
-      customPermissions: true,
-    },
   });
 
   if (!user)
     throw new ApiError(status.BAD_REQUEST, "Token is invalid or has expired");
 
   const hashedPassword = await bcrypt.hash(newPassword, 12);
+
   await prisma.user.update({
     where: { id: user.id },
     data: {
-      password: hashedPassword,
+      passwordHash: hashedPassword,
       passwordResetToken: null,
       passwordResetExpires: null,
     },
@@ -241,10 +217,6 @@ const resetPassword = async (token, newPassword) => {
 const updatePassword = async (userId, currentPassword, newPassword) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    include: {
-      role: { include: { permissions: { include: { permission: true } } } },
-      customPermissions: true,
-    },
   });
   if (!user) throw new ApiError(status.NOT_FOUND, "User not found");
 
@@ -255,19 +227,14 @@ const updatePassword = async (userId, currentPassword, newPassword) => {
   const hashedPassword = await bcrypt.hash(newPassword, 12);
   await prisma.user.update({
     where: { id: userId },
-    data: { password: hashedPassword },
+    data: { passwordHash: hashedPassword },
   });
-
-  const rolePermissions =
-    user.role?.permissions?.map((p) => p.permission) || [];
-  const customPermissions = user.customPermissions || [];
-  const permissions = [...new Set([...rolePermissions, ...customPermissions])];
 
   const { accessToken, refreshToken } = generateTokens(user);
   return {
     accessToken,
     refreshToken,
-    user: { ...user, password: undefined, permissions },
+    user: { ...user },
   };
 };
 
@@ -328,11 +295,6 @@ const verifyToken = async (token) => {
     const decoded = verifyAccessToken(token);
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
-      include: {
-        role: { include: { permissions: { include: { permission: true } } } },
-        customPermissions: true,
-        employee: true,
-      },
     });
     if (!user || !user.isActive || changedPasswordAfter(user, decoded.iat))
       return null;

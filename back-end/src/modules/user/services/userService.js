@@ -16,9 +16,6 @@ const getUsers = async (filters = {}) => {
     limit = 10,
     pagination = true,
     search,
-    department,
-    position,
-    employmentStatus,
     isActive = true,
     sortBy = "createdAt",
     sortOrder = "desc",
@@ -31,30 +28,9 @@ const getUsers = async (filters = {}) => {
   const where = {
     isActive:
       isActive === "false" ? false : isActive === "true" ? true : isActive,
-    ...(department
-      ? {
-          employee: {
-            department: { contains: department, mode: "insensitive" },
-          },
-        }
-      : {}),
-    ...(position
-      ? { employee: { position: { contains: position, mode: "insensitive" } } }
-      : {}),
-    ...(employmentStatus ? { employee: { employmentStatus } } : {}),
     ...(search
       ? {
-          OR: [
-            { username: { contains: search, mode: "insensitive" } },
-            {
-              employee: { fullName: { contains: search, mode: "insensitive" } },
-            },
-            {
-              employee: {
-                employeeID: { contains: search, mode: "insensitive" },
-              },
-            },
-          ],
+          OR: [{ username: { contains: search, mode: "insensitive" } }],
         }
       : {}),
   };
@@ -66,19 +42,6 @@ const getUsers = async (filters = {}) => {
     const [users, total] = await Promise.all([
       prisma.user.findMany({
         where,
-        include: {
-          role: { include: { permissions: true } },
-          customPermissions: true,
-          employee: {
-            select: {
-              fullName: true,
-              employeeID: true,
-              department: true,
-              position: true,
-              employmentStatus: true,
-            },
-          },
-        },
         skip: (parsedPage - 1) * parsedLimit,
         take: parsedLimit,
         orderBy,
@@ -101,19 +64,6 @@ const getUsers = async (filters = {}) => {
   } else {
     return await prisma.user.findMany({
       where,
-      include: {
-        role: { include: { permissions: true } },
-        customPermissions: true,
-        employee: {
-          select: {
-            fullName: true,
-            employeeID: true,
-            department: true,
-            position: true,
-            employmentStatus: true,
-          },
-        },
-      },
       orderBy,
     });
   }
