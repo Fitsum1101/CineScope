@@ -31,7 +31,7 @@ const generateAccessToken = (user) => {
  */
 const generateRefreshToken = (user) => {
   const payload = {
-    id: user._id,
+    id: user.id,
     type: "refresh",
     iat: Math.floor(Date.now() / 1000),
   };

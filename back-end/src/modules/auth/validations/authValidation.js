@@ -1,5 +1,6 @@
 // validations/authValidation.js
 const Joi = require("joi");
+
 const { password, username, email, id } = require("../../../utils/customJoi");
 
 const login = {
@@ -30,13 +31,9 @@ const register = {
         "string.pattern.base":
           "Password must contain at least one lowercase letter, one uppercase letter, and one number",
       }),
-      employeeId: id.required().messages({
-        "any.required": "Employee ID is required",
-        "any.invalid": "Valid Employee ID is required",
-      }),
-      role: id.required().messages({
-        "any.required": "Role ID is required",
-        "any.invalid": "Valid Role ID is required",
+      email: email().required().messages({
+        "any.required": "Email is required",
+        "string.email": "Email must be a valid email address",
       }),
     })
     .required(),

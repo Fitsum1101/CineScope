@@ -37,6 +37,7 @@ const login = catchAsync(async (req, res) => {
 /**
  * Register a new user
  */
+
 const register = catchAsync(async (req, res) => {
   const user = await authService.register(req.body);
   return res

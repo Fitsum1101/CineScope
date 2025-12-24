@@ -14,6 +14,7 @@ app.get("/", (_, res) => {
   });
 });
 
+app.use("/api/v1/auth", routeIndex.auth.authRoutes);
 app.use("/api/v1/movies", routeIndex.movies.movieRoutes);
 app.use("/api/v1/users", routeIndex.users.userRoutes);
 

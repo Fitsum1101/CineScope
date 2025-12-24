@@ -81,7 +81,6 @@ const changedPasswordAfter = (user, JWTTimestamp) => {
  * Login user
  */
 const login = async (username, password) => {
-  console.log(username, password);
   if (!username || !password) {
     throw new ApiError(
       status.BAD_REQUEST,
@@ -127,7 +126,7 @@ const login = async (username, password) => {
       },
     },
   });
-  console.log(user);
+
   if (!user || !user.isActive)
     throw new ApiError(status.FORBIDDEN, "Incorrect username or password");
 
