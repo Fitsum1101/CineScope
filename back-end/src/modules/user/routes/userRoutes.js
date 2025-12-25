@@ -33,6 +33,16 @@ router
     userController.deactivateUser
   );
 
+//  user growth per month router
+
+router
+  .route("/growth-per-month")
+  .get(
+    authorize(["admin"]),
+    validate(userValidation.yearParam),
+    userController.userGrowthPerMonth
+  );
+
 router
   .route("/:id/reactivate")
   .patch(

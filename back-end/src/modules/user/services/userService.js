@@ -1,12 +1,6 @@
 const { prisma } = require("../../../config/db");
 const ApiError = require("../../../utils/apiError");
 
-const createUser = async (userData) => {
-  return await prisma.user.create({
-    data: userData,
-  });
-};
-
 /**
  * Get all users with optional filters
  */
@@ -30,7 +24,10 @@ const getUsers = async (filters = {}) => {
       isActive === "false" ? false : isActive === "true" ? true : isActive,
     ...(search
       ? {
-          OR: [{ username: { contains: search, mode: "insensitive" } }],
+          OR: [
+            { username: { contains: search, mode: "insensitive" } },
+            { email: { contains: search, mode: "insensitive" } },
+          ],
         }
       : {}),
   };
@@ -99,55 +96,9 @@ const getUser = async (id) => {
 const getUserByUsername = async (username) => {
   const user = await prisma.user.findFirst({
     where: { username: username.toLowerCase(), isActive: true },
-    include: {
-      role: { include: { permissions: true } },
-      customPermissions: true,
-      employee: {
-        select: {
-          fullName: true,
-          employeeID: true,
-          department: true,
-          position: true,
-          employmentStatus: true,
-        },
-      },
-    },
   });
   if (!user) throw new ApiError(status.NOT_FOUND, "User not found");
   return user;
-};
-
-/**
- * Authenticate user by username and password
- */
-const authenticateUser = async (username, password) => {
-  const user = await getUserByUsername(username);
-
-  // Check password
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { loginAttempts: { increment: 1 } },
-    });
-    throw new ApiError(status.FORBIDDEN, "Incorrect username or password");
-  }
-
-  // Reset login attempts
-  await prisma.user.update({
-    where: { id: user.id },
-    data: { loginAttempts: 0, lastLogin: new Date() },
-  });
-
-  // Generate tokens
-  const tokens = generateTokens({
-    id: user.id,
-    username: user.username,
-    role: user.role,
-    permissions: user.customPermissions,
-  });
-
-  return { user, tokens };
 };
 
 /**
@@ -157,19 +108,6 @@ const updateUser = async (id, updateData) => {
   const user = await prisma.user.update({
     where: { id },
     data: updateData,
-    include: {
-      role: { include: { permissions: true } },
-      customPermissions: true,
-      employee: {
-        select: {
-          fullName: true,
-          employeeID: true,
-          department: true,
-          position: true,
-          employmentStatus: true,
-        },
-      },
-    },
   });
   if (!user) throw new ApiError(status.NOT_FOUND, "User not found");
   return user;
@@ -182,7 +120,6 @@ const deleteUser = async (id) => {
   const user = await prisma.user.update({
     where: { id },
     data: { isActive: false },
-    include: { role: true, customPermissions: true },
   });
   if (!user) throw new ApiError(status.NOT_FOUND, "User not found");
   return user;
@@ -198,34 +135,10 @@ const usernameExists = async (username) => {
   return !!user;
 };
 
-const getUsersByRole = async (roleId) => {
-  return await prisma.user.findMany({
-    where: { roleId },
-    include: { role: true, customPermissions: true },
-  });
-};
-
-const userHasPermission = async (userId, permissionName) => {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    include: {
-      role: { include: { permissions: true } },
-      customPermissions: true,
-    },
-  });
-  if (!user) throw new ApiError(status.NOT_FOUND, "User not found");
-
-  const allPermissions = [
-    ...(user.role?.permissions?.map((p) => p.name) || []),
-    ...(user.customPermissions?.map((p) => p.name) || []),
-  ];
-
-  return allPermissions.includes(permissionName);
-};
-
 /**
  * Password reset methods
  */
+
 const createPasswordResetToken = async (userId) => {
   const resetToken = crypto.randomBytes(32).toString("hex");
   const hashedToken = crypto
@@ -268,6 +181,32 @@ const resetLoginAttempts = async (userId) => {
   });
 };
 
+//  user growth per month
+
+const userGrowthPerMonth = async (year) => {
+  const growthData = await prisma.user.groupBy({
+    by: ["createdAt"],
+    where: {
+      createdAt: {
+        gte: new Date(`${year}-01-01`),
+        lt: new Date(`${year + 1}-01-01`),
+      },
+    },
+    _count: {
+      id: true,
+    },
+  });
+
+  const monthlyGrowth = Array(12).fill(0);
+
+  growthData.forEach((data) => {
+    const month = data.createdAt.getMonth();
+    monthlyGrowth[month] += data._count.id;
+  });
+
+  return monthlyGrowth;
+};
+
 /**
  * Password change verification
  */
@@ -281,19 +220,16 @@ const changedPasswordAfter = async (userId, JWTTimestamp) => {
 };
 
 module.exports = {
-  createUser,
   getUsers,
   getUser,
   getUserByUsername,
-  authenticateUser,
   updateUser,
   deleteUser,
   usernameExists,
-  getUsersByRole,
-  userHasPermission,
   createPasswordResetToken,
   clearPasswordResetToken,
   incrementLoginAttempts,
   resetLoginAttempts,
   changedPasswordAfter,
+  userGrowthPerMonth,
 };
