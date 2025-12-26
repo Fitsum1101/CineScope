@@ -20,7 +20,7 @@ app.get("/", (_, res) => {
 app.use("/api/v1/auth", routeIndex.auth.authRoutes);
 app.use("/api/v1/movies", routeIndex.movies.movieRoutes);
 app.use("/api/v1/users", routeIndex.users.userRoutes);
-app.use("/api/v1/review", routeIndex.users.userRoutes);
+app.use("/api/v1/review", routeIndex.review.reviewRoutes);
 app.use(
   "/api/v1/flagged-content",
   routeIndex.flagentContet.flaggedcontentRoutes

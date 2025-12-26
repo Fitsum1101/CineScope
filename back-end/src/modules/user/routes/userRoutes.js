@@ -40,7 +40,7 @@ router
   .get(
     authorize(["admin"]),
     validate(userValidation.yearParam),
-    userController.userGrowthPerMonth
+    userController.getUser
   );
 
 router
